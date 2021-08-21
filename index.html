@@ -5,9 +5,65 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Storage indexedDB 19 Agosto 2021</title>
-    <script src="app.js" type="module"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="DB/main.js"></script>
+    <script src="DB/metodos.js" ></script>
+    <script src="app.js"></script>
 </head>
 <body>
-    <h1>F12</h1>
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-3">
+ 
+            </div>
+            <div class="col-12 col-lg-6">
+                <form id="myForm" method="POST">
+                    <div class="mb-3">
+                        <label for="inputCedula" class="form-label">Cedula</label>
+                        <input type="number" class="form-control" id="inputCedula" aria-describedby="inputCedulaMensaje">
+                        <div id="inputCedulaMensaje" class="form-text">Ingrese su cedula de ciudadania</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputNombres" class="form-label">Nombres Completos</label>
+                        <input type="text" class="form-control" id="inputNombres" aria-describedby="inputNombresMensaje">
+                        <div id="inputNombresMensaje" class="form-text">Ingrese sus dos nombres</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="inputApellidos" class="form-label">Apellidos Completos</label>
+                        <input type="text" class="form-control" id="inputApellidos" aria-describedby="inputApellidosMensaje">
+                        <div id="inputApellidosMensaje" class="form-text">Ingrese sus dos apellidos</div>
+                    </div>
+                    <!-- <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                        <label class="form-check-label" for="exampleCheck1">Check me out</label>
+                    </div> -->
+                    <input type="submit" class="btn btn-primary" value="Enviar datos">
+                </form>
+                
+            </div>
+            <div class="col-12 col-lg-3">
+ 
+            </div>
+        </div>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Cedula</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Apellido</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+            </tr>
+            
+        </tbody>
+    </table>
 </body>
 </html>

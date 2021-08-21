@@ -1,115 +1,73 @@
-// import {DB} from './DB/main.js';
 
-const DBrequest = window.indexedDB;
 
-const db = DBrequest.open("DB_Usuarios",4);
-
-const CrearPaquete = ({...arg}) =>{
-    let dbPaquetes = db.result;
-    for(let [id, value] of Object.entries(arg)){
-        dbPaquetes.createObjectStore(
-                ...value.opcione
-                    ? [value.nombre,value.opcione]
-                    : [value.nombre,{autoIncrement: true}]
-                );
-        // if(value.opcione){
-        //     dbPaquetes.createObjectStore(value.nombre,value.opcione);
-        // }else{
-        //     dbPaquetes.createObjectStore(value.nombre,{
-        //         autoIncrement: true
-        //     });
-        // }
-        console.log(`Paquete ${value.nombre} Creado exitosamente`);
+addEventListener("DOMContentLoaded", (e)=>{
+    let buscarData = {
+        informacion : {
+            // token: "GEFS-ASDF-WFTA-83",
+        },
+        configuracion:{
+            tabla: 'TB_formulario_index',
+            opcion: 'readonly'
+        }  
     }
+    setTimeout(() => {
+        let fragmen = new DocumentFragment();
+        let datos = buscarDatosPaquetes(buscarData);
+        
+        console.log({...datos});
+    }, 1000);
+    const form = document.querySelector("#myForm");
+    form.addEventListener("submit", (e)=>{
+        const data = Array.from(form);
+        data.pop(); 
+        data.map((input, indice)=>{
+            data[indice] = {
+                id:input.id,
+                value: input.value
 
-}
-db.addEventListener('upgradeneeded', ()=>{
-    console.log(`Creando la base de datos Nombre: ${db.result.name} Version: ${db.result.version}`);
-    let paquetes  = [
-        {nombre: 'TB_informacion_vivienda'},
-        {nombre: 'TB_informacion_personal'},
-        {nombre: 'TB_informacion_curso',
-        opcione : {
-            keyPath : 'token'
-        }},
-    ];
-    // opcione : {
-    //     keyPath : 'token'
-    // }
-    CrearPaquete(paquetes);
+            };
+        })
+        let guardarData = {
+            informacion : {
+                token: `GEFS-ASDF-WFTA-${Math.trunc(Math.random()*100)}`,
+                formularios: data,
+            },
+            configuracion:{
+                tabla: 'TB_formulario_index',
+                opcion: 'readwrite'
+            }   
+        }
+        console.log(guardarData);
+        guardarDatosPaquetes(guardarData);
+        e.preventDefault();
+    })
 })
 
-db.addEventListener('success', ()=>{
-    console.log(`
-    Ocurrio un alteracion
-    Base de datos: ${db.result.name},
-    Version: ${db.result.version}, 
-    Cantidad de paquetes ${db.result.objectStoreNames.length}`
-    ,db.result.objectStoreNames);
-
-})
-
-db.addEventListener('error', error=>{
-    console.log(`Ocurrio un error ${error}`);
-})
 
 
-const guardarDatosPaquetes = ({...arg})=>{
-    const dbGuardar = db.result;
-    const dbTran = dbGuardar.transaction(...Object.values(arg.configuracion));
-    const dbStora = dbTran.objectStore(arg.configuracion.tabla);
-    // Validar si no se envia la keyPath si el paquete lo requiere
-    const respuesta = (dbStora.keyPath)
-    ?( 
-        (arg.informacion[dbStora.keyPath])
-            ? arg.informacion
-            : `No estas enviando la keyPath del paquete ${arg.configuracion.tabla}`
-    ): arg.informacion;
-    // Ubicar la respuesta de la validacion y ejecutar la transaction
-    // o el mensaje
-    (respuesta instanceof Object)
-        ?(
-            dbStora.add(arg.informacion),
-            dbTran.addEventListener('complete', (e)=>{
-                console.warn("Datos Guardados", e);
-            })
-        )
-        :(console.log(respuesta));
-    
-    // if(dbStora.keyPath){
-    //     if(arg.informacion[dbStora.keyPath]){
-    //         dbStora.add(arg.informacion);
-    //         dbTran.addEventListener('complete', (e)=>{
-    //             console.warn("Datos Guardados", e);
-    //         })
-    //     }else{
-    //         console.log(`No estas enviando la keyPath del paquete ${arg.configuracion.tabla}`);
-    //         return
-    //     }
-    // }else{
-    //     dbStora.add(arg.informacion);
-    //     dbTran.addEventListener('complete', (e)=>{
-    //         console.warn("Datos Guardados", e);
-    //     })
-    // }
-    
-    
-}
 
-let data = {
-    informacion : {
-        token: "1452j87gf-miguel-5",
-        cursos: ["Diplomado Nivel 1 Javascript",
-        "Diplomado Nivel 2 Javascript"]
-    },
-    configuracion:{
-        tabla: 'TB_informacion_personal',
-        opcion: 'readwrite'
-    }   
-}
-
-
-setTimeout(() => {
-    guardarDatosPaquetes(data);
-}, 1000);
+// let guardarData = {
+//     informacion : {
+//         token: `GEFS-ASDF-WFTA-${Math.trunc(Math.random()*100)}`,
+//         cursos: ["Diplomado Nivel 1 Javascript",
+//         "Diplomado Nivel 2 Javascript"]
+//     },
+//     configuracion:{
+//         tabla: 'TB_informacion_index',
+//         opcion: 'readwrite'
+//     }   
+// }
+// let buscarData = {
+//     informacion : {
+//         token: "GEFS-ASDF-WFTA-83",
+//     },
+//     configuracion:{
+//         tabla: 'TB_informacion_index',
+//         opcion: 'readonly'
+//     }  
+// }
+// setTimeout(() => {
+//     guardarDatosPaquetes(guardarData);
+//     console.log(buscarDatosPaquetes(buscarData));
+// }, 1000);
 
