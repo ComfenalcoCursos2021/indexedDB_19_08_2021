@@ -28,10 +28,13 @@ db.addEventListener('upgradeneeded', ()=>{
     let paquetes  = [
         {nombre: 'TB_informacion_vivienda'},
         {nombre: 'TB_informacion_personal'},
-        {nombre: 'TB_informacion_curso'},
+        {nombre: 'TB_informacion_curso',
+        opcione : {
+            keyPath : 'token'
+        }},
     ];
     // opcione : {
-    //     keypath : "hola"
+    //     keyPath : 'token'
     // }
     CrearPaquete(paquetes);
 })
@@ -55,23 +58,57 @@ const guardarDatosPaquetes = ({...arg})=>{
     const dbGuardar = db.result;
     const dbTran = dbGuardar.transaction(...Object.values(arg.configuracion));
     const dbStora = dbTran.objectStore(arg.configuracion.tabla);
-    dbStora.add(arg.informacion);
-    dbTran.addEventListener('complete', (e)=>{
-        console.warn("Datos Guardados", e);
-    })
+    // Validar si no se envia la keyPath si el paquete lo requiere
+    const respuesta = (dbStora.keyPath)
+    ?( 
+        (arg.informacion[dbStora.keyPath])
+            ? arg.informacion
+            : `No estas enviando la keyPath del paquete ${arg.configuracion.tabla}`
+    ): arg.informacion;
+    // Ubicar la respuesta de la validacion y ejecutar la transaction
+    // o el mensaje
+    (respuesta instanceof Object)
+        ?(
+            dbStora.add(arg.informacion),
+            dbTran.addEventListener('complete', (e)=>{
+                console.warn("Datos Guardados", e);
+            })
+        )
+        :(console.log(respuesta));
+    
+    // if(dbStora.keyPath){
+    //     if(arg.informacion[dbStora.keyPath]){
+    //         dbStora.add(arg.informacion);
+    //         dbTran.addEventListener('complete', (e)=>{
+    //             console.warn("Datos Guardados", e);
+    //         })
+    //     }else{
+    //         console.log(`No estas enviando la keyPath del paquete ${arg.configuracion.tabla}`);
+    //         return
+    //     }
+    // }else{
+    //     dbStora.add(arg.informacion);
+    //     dbTran.addEventListener('complete', (e)=>{
+    //         console.warn("Datos Guardados", e);
+    //     })
+    // }
+    
+    
 }
 
 let data = {
-    informacion : 
-       ["Diplomado Nivel 1 Javascript",
+    informacion : {
+        token: "1452j87gf-miguel-5",
+        cursos: ["Diplomado Nivel 1 Javascript",
         "Diplomado Nivel 2 Javascript"]
-    ,
+    },
     configuracion:{
-        tabla: 'TB_informacion_curso',
+        tabla: 'TB_informacion_personal',
         opcion: 'readwrite'
-    }
-    
+    }   
 }
+
+
 setTimeout(() => {
     guardarDatosPaquetes(data);
 }, 1000);
