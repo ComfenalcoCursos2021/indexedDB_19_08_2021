@@ -61,6 +61,8 @@ addEventListener("DOMContentLoaded", (e)=>{
     
     const guardar = document.querySelector("#guardar");
     const buscar = document.querySelector("#buscar");
+    const actualizar = document.querySelector("#actualizar");
+    const eliminar = document.querySelector("#eliminar");
     //Guardar Datos
     guardar.addEventListener("click", (e)=>{
         const data = Array.from(form);
@@ -92,6 +94,7 @@ addEventListener("DOMContentLoaded", (e)=>{
         console.log(guardarData);
         guardarDatosPaquetes(guardarData);
         buscarDatosPaquetes(buscarData);
+        form.reset();
         e.preventDefault();
     })
     //Buscar Datos
@@ -108,6 +111,7 @@ addEventListener("DOMContentLoaded", (e)=>{
             }  
         }
         buscarDatosPaquetes(buscarData);
+        form.reset();
         e.preventDefault();
     })
     //Listar Datos
@@ -120,6 +124,66 @@ addEventListener("DOMContentLoaded", (e)=>{
             }  
         }
         buscarDatosPaquetes(buscarData);
+        form.reset();
+        e.preventDefault();
+    })
+    //Actualizar Datos
+    actualizar.addEventListener("click", (e)=>{
+        const data = Array.from(form);
+        data.splice(...botones);
+        data.map((input, indice)=>{
+            data[indice] = {
+                id:input.id,
+                value: input.value
+            };
+        })
+        let actualizarData = {
+            informacion : {
+                token: document.querySelector("#inputToken").value,
+                formularios: data,
+            },
+            configuracion:{
+                tabla: 'TB_formulario_index',
+                opcion: 'readwrite'
+            }   
+        }
+        let buscarData = {
+            informacion : {},
+            configuracion:{
+                tabla: 'TB_formulario_index',
+                opcion: 'readonly'
+            }  
+        }
+
+        AcualizarDatosPaquetes(actualizarData);
+        buscarDatosPaquetes(buscarData);
+        form.reset();
+        e.preventDefault();
+    })
+    //Eliminar Datos
+    eliminar.addEventListener("click", (e)=>{
+        const data = Array.from(form);
+        data.splice(...botones);
+        
+        let eliminarData = {
+            informacion : {
+                token: document.querySelector("#inputToken").value,
+            },
+            configuracion:{
+                tabla: 'TB_formulario_index',
+                opcion: 'readwrite'
+            }   
+        }
+        let buscarData = {
+            informacion : {},
+            configuracion:{
+                tabla: 'TB_formulario_index',
+                opcion: 'readonly'
+            }  
+        }
+        EliminarDatosPaquetes(eliminarData);
+        buscarDatosPaquetes(buscarData);
+        form.reset();
         e.preventDefault();
     })
 })
