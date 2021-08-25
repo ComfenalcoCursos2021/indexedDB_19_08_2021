@@ -55,12 +55,15 @@ const buscarDatosPaquetes = ({...arg})=>{
     // }else{
     //     cursor = dbStora.openCursor();
     // }
+
     cursor.addEventListener('success', (e)=>{
         const dbCursor = e.target.result;
         if(dbCursor){
-            data.push(dbCursor.value);
+            postMessage({data: dbCursor.value, tb:arg.configuracion.tabla});
             dbCursor.continue();
+        }else{
+            postMessage(false);
         }
     })
-    return data;
+    
 }
